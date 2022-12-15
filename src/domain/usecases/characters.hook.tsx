@@ -1,6 +1,8 @@
 import {useState} from 'react';
 import {useConfig} from '../../core/context/ConfigurationContext';
+import UsecaseResponse from '../../core/usecase/usecase.response';
 import CharactersEntity from '../entities/characters.entity';
+import ListAllCharactersResponse from './listAllCharacters/listAllCharacters.response';
 
 const useCharacters = () => {
   const {listAllCharactersUsecase} = useConfig();
@@ -9,14 +11,22 @@ const useCharacters = () => {
   const [allCharacters, setAllCharacters] = useState<CharactersEntity[] | null>(
     null,
   );
+  let hasMorePage = true;
+
   const listAllCharacters = async () => {
+    if (!hasMorePage || isLoading) {
+      return;
+    }
+
     setLoading(true);
-    const response = await listAllCharactersUsecase.call();
+    const response: UsecaseResponse<ListAllCharactersResponse> =
+      await listAllCharactersUsecase.call();
     if (response.data) {
-      setAllCharacters(response.data);
+      setAllCharacters(response.data.characters);
       setError(null);
+      hasMorePage = response.data.hasMorePage;
     } else {
-      setAllCharacters(null);
+      // setAllCharacters(null);
       setError(response.error);
     }
     setLoading(false);

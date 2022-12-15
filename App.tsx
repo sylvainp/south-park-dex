@@ -14,9 +14,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {faPalette, faClose} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {Modal, TouchableOpacity} from 'react-native';
+import {Modal, TouchableOpacity, View} from 'react-native';
 import {store, useStoreState} from './src/core/store/store';
-import {StoreProvider} from 'easy-peasy';
+import {StoreProvider, useStoreRehydrated} from 'easy-peasy';
 import {Theme} from './src/core/themes/theme';
 import ThemeSwitcherPage from './src/presentation/themeswitcher.page';
 
@@ -70,6 +70,10 @@ const headerRightOpenThemeSwitcherButton = (
 
 const App = () => {
   const currentTheme = useStoreState(state => state.theme);
+  const isRehydrated = useStoreRehydrated();
+  if (!isRehydrated) {
+    return <View />;
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator

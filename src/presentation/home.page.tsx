@@ -27,8 +27,17 @@ const HomePage = () => {
     <SafeAreaView style={{backgroundColor: currentTheme.background}}>
       <StatusBar />
       <View style={styles.root}>
-        {isLoading && <ActivityIndicator />}
-        {allCharacters && <CharactersList datas={allCharacters} />}
+        {allCharacters && (
+          <CharactersList
+            datas={allCharacters}
+            loadMore={() => listAllCharacters()}
+          />
+        )}
+        {isLoading && (
+          <ActivityIndicator
+            style={{...{backgroundColor: currentTheme.background}}}
+          />
+        )}
         {error && <Text>{JSON.stringify(error)}</Text>}
       </View>
     </SafeAreaView>

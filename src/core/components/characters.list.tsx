@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     margin: 4,
     backgroundColor: 'lightgrey',
     borderRadius: 10,
-    padding: 4,
+    paddingHorizontal: 10,
     alignItems: 'center',
   },
 
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
 });
 export interface CharactersListProps {
   datas: CharactersEntity[];
+  loadMore: () => {};
 }
 
 const themedRowStyle = (currentTheme: Theme): ViewStyle => {
@@ -76,7 +77,7 @@ const CharacterItem = ({item}: any, currentTheme: Theme) => {
         <Text style={{...styles.title, ...themedTitleStyle(currentTheme)}}>
           {item.name}
         </Text>
-        {item.sex === 'Male' && (
+        {/* {item.sex === 'Male' && (
           <FontAwesomeIcon
             style={styles.gender}
             icon={faMars}
@@ -91,7 +92,7 @@ const CharacterItem = ({item}: any, currentTheme: Theme) => {
             size={30}
             color={'violet'}
           />
-        )}
+        )} */}
       </View>
       <FontAwesomeIcon
         style={styles.arrow}
@@ -102,13 +103,16 @@ const CharacterItem = ({item}: any, currentTheme: Theme) => {
     </View>
   );
 };
-const CharactersList: React.FC<CharactersListProps> = ({datas}) => {
+const CharactersList: React.FC<CharactersListProps> = ({datas, loadMore}) => {
   const currentTheme = useStoreState(state => state.theme);
   return (
     <FlatList
       style={{...themedListStyle(currentTheme)}}
       data={datas}
+      keyExtractor={(item: CharactersEntity) => `${item.id}`}
       renderItem={item => CharacterItem(item, currentTheme)}
+      onEndReachedThreshold={0.4}
+      onEndReached={() => loadMore()}
     />
   );
 };

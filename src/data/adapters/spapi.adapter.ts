@@ -1,13 +1,21 @@
-import CharactersApiModel from '../models/characters.api.model';
+import GetCharactersResponseApiModel from '../models/getCharactersResponse.api.model';
 
 export default class SouthParkApiAdpter {
   private readonly baseurl: string = 'https://spapi.dev/api';
-  async getAllCharacters(): Promise<CharactersApiModel[]> {
+  private currentPage: number = 1;
+  async getAllCharacters(): Promise<GetCharactersResponseApiModel> {
     try {
-      const fetchResponse = await fetch(`${this.baseurl}/characters`);
+      const fetchResponse = await fetch(
+        `${this.baseurl}/characters?page=${this.currentPage}`,
+      );
       const response = await fetchResponse.json();
-      return response.data;
+      this.currentPage++;
+      // console.log(
+      //   `${response.data.map((item: any) => `[${item.id}]${item.name}`)}`,
+      // );
+      return response;
     } catch (error) {
+      // console.error({error});
       return Promise.reject(error);
     }
   }
